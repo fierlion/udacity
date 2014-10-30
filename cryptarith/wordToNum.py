@@ -13,7 +13,7 @@ def compile_word(word):
     splWord = list(word.upper())
     retWord = []
     for i in range(len(splWord)):
-        retWord.append(splWord[(len(splWord)-1)-i]+'*'+str(10**i))
+        retWord.append(str(10**i) + '*' + splWord[(len(splWord)-1)-i])
     return '('+ ('+'.join(retWord)) + ')'
 
 #test word
