@@ -31,8 +31,6 @@ def t_error(t):
     print "Lexer: unexpected character " + t.value[0]
     t.lexer.skip(1) 
 
-# We have included some testing code to help you check your work. You will
-# probably want to add your own additional tests. 
 lexer = lex.lex() 
 
 #function to manually change string formatted hex ('0x###') to decimal 
