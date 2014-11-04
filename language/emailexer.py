@@ -27,8 +27,6 @@ def addresses(haystack):
         result = result + [re.sub(r"NOSPAM", "", str(tok.value))]
     return result
 
-# We have provided a single test case for you. You will probably want to
-# write your own. 
 input1 = """louiseNOSPAMaston@germany.de (1814-1871) was an advocate for
 democracy. irmgardNOSPAMkeun@NOSPAMweimar.NOSPAMde (1905-1982) wrote about
 the early nazi era. rahelNOSPAMvarnhagen@berlin.de was honored with a 1994
