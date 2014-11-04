@@ -62,8 +62,6 @@ def test_lexer(input_string):
 question1 = "0x19 equals 25" # 0x19 = (1*16) + 9
 answer1 = [('NUM', 25), ('ID', 'equals'), ('NUM', 25) ]
 
-#print test_lexer(question1)
-
 question2 = "0xfeed MY 0xface" 
 answer2 = [('NUM', 65261), ('ID', 'MY'), ('NUM', 64206) ]
 
@@ -72,11 +70,13 @@ print test_lexer(question2) == answer2
 
 question3 = "tricky 0x0x0x" 
 answer3 = [('ID', 'tricky'), ('NUM', 0), ('ID', 'x'), ('NUM', 0), ('ID', 'x')]
+
 print test_lexer(question3) == answer3
 
-
 question4 = "in 0xdeed"
+
 print test_lexer(question4)
 
 question5 = "where is the 0xbeef"
+
 print test_lexer(question5)
