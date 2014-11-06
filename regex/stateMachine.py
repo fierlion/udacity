@@ -45,7 +45,6 @@ def nfsmaccepts(current, edges, accepting, visited):
 	else:
 		return output
 
-
 def nfsmHelper(current, edges, accepting, visited):
 	#base case
 	if current in accepting or current in visited:
@@ -59,7 +58,7 @@ def nfsmHelper(current, edges, accepting, visited):
 					return ""
 				else:
 					visited.append(edge[0])
-					return nfsmaccepts(current, edges, edge, visited) + edge[1]
+					return nfsmHelper(current, edges, edge, visited) + edge[1]
 
 #test cases:
 print "Test 1: " + str(nfsmaccepts(1, edges, accepting, []) == "abc") 
