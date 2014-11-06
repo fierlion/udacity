@@ -58,7 +58,6 @@ def nfsmHelper(current, edges, accepting, visited):
 					return ""
 				else:
 					visited.append(edge[0])
-					print accepting[0], visited, edge[1]
 					return nfsmaccepts(current, edges, edge, visited) + edge[1]
 
 #test cases:
