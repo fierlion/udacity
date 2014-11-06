@@ -36,8 +36,9 @@ accepting2 = [2]
 
 def nfsmaccepts(current, edges, accepting, visited):
 	output = nfsmHelper(current, edges, accepting, visited)
-	#helper checks if the output string is too repetitive
-	#weakness there might be valid, yet repetitive strings 
+	#helper checks if the output string is too repetitive 
+	#(because self loops)
+	#weakness: there might be valid, yet repetitive strings 
 	#which satisfy the NFSM. 
 	if (len(output) - len(set(list(output)))) > 2:
 		return None
@@ -53,7 +54,7 @@ def nfsmHelper(current, edges, accepting, visited):
 	else:
 		for edge in edges:
 			if accepting[0] in edges[edge]:
-				#if all in set are the same
+				#cap off infinite recursion in case of self loop
 				if len (visited) > 3 and len(set(visited)) == 1:
 					return ""
 				else:
