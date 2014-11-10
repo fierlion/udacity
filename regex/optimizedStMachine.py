@@ -43,11 +43,16 @@ def nfsmtrim(edges, accepting):
   keepers = []
   trimmers = []
   trimmedEdges = copy.deepcopy(edges)
+  trimmedAccept = copy.deepcopy(accepting)
 
   #find dead nodes/edges
   for node in edges:
-    if nfsmHelper(node[0], edges, accepting, visited):
-      keepers.append(node[0])
+    #success now includes successful accepting nodes too!
+    success = nfsmHelper(node[0], edges, accepting, visited)
+    if success > 0:
+      for item in success:
+        keepers.append(item)
+
 
   keepSet = set(keepers)
 
@@ -66,14 +71,19 @@ def nfsmtrim(edges, accepting):
   for node in trimmers:
     trimmedEdges.pop(node)
 
-  return trimmedEdges, accepting
+  #finally trim the accepting
+  for node in trimmedAccept:
+    if node not in keepSet:
+      trimmedAccept.remove(node)
+
+  return trimmedEdges, trimmedAccept
 
 
 def nfsmHelper(current, edges, accepting, visited):
   if current in visited:
-    return False
+    return []
   elif current in accepting:
-    return True
+    return visited + [current]
   else:
     #add current to visited
     newvisited = visited + [current]
@@ -82,7 +92,8 @@ def nfsmHelper(current, edges, accepting, visited):
         for edge in edges[node]:
           accepted = nfsmHelper(edge, edges, accepting, newvisited)
           if accepted:
-            return True
+            return newvisited + [edge]
+
 
 # We have included a few test cases, but you will definitely want to make
 # your own. 
@@ -94,19 +105,14 @@ edges1 = { (1,'a') : [1] ,
            (8,'z') : [9] , } 
 accepting1 = [ 1 ] 
 (new_edges1, new_accepting1) = nfsmtrim(edges1,accepting1) 
-print new_edges1
 print new_edges1 == {(1, 'a'): [1]}
 print new_accepting1 == [1] 
-
-print "EDGES1 is"
-print edges1
 
 (new_edges2, new_accepting2) = nfsmtrim(edges1,[]) 
 print new_edges2 == {}
 print new_accepting2 == [] 
 
 (new_edges3, new_accepting3) = nfsmtrim(edges1,[3,6]) 
-print new_edges3
 print new_edges3 == {(1, 'a'): [1], (1, 'b'): [2], (2, 'b'): [3]}
 print new_accepting3 == [3]
 
@@ -125,3 +131,11 @@ print new_edges4 == {
 }
 #print new_edges4
 print new_accepting4 == [2]
+
+edges5 = { (1,'a') : [1] ,
+           (1,'b') : [2] ,
+           (2,'b') : [3] } 
+accepting5 = [3]
+
+(new_edges5, new_accepting5) = nfsmtrim(edges5, accepting5)
+print new_edges5, accepting5
