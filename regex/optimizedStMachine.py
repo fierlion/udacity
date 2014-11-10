@@ -35,44 +35,50 @@
 # nfsmtrim(edges,accepting) should return a tuple (new_edges,new_accepting)
 # corresponding to a FSM that accepts exactly the same strings as the input
 # FSM but that has all dead states removed. 
-#
-# Hint 1: This problem is tricky. Do not get discouraged. 
-#
-# Hint 2: Think back to the nfsmaccepts() procedure from the "Reading
-# Machine Minds" homework problem in Unit 1. You are welcome to reuse your
-# code (or the solution we went over) to that problem. 
-#
-# Hint 3: Gather up all of the states in the input machine. Filter down
-# to just those states that are "live". new_edges will then be just like
-# edges, but including only those transitions that involve live states.
-# new_accepting will be just like accepting, but including only those live
-# states. 
-
 
 def nfsmtrim(edges, accepting): 
   visited = []
-  for edge in edges:
-    nfsmHelper(edge[0], edges, accepting, visited)
-    print edge, edge[0]
-  return visited
+  keepers = []
+  trimmers = []
+
+  #find dead nodes/edges
+  for node in edges:
+    if nfsmHelper(node[0], edges, accepting, visited):
+      keepers.append(node[0])
+
+  keepSet = set(keepers)
+
+  #remove unwanted edges
+  for node in edges:
+    for edge in edges[node]:
+      if edge not in keepSet:
+        edges[node].remove(edge)
+
+  #make list of unwanted nodes to pop
+  for node in edges:
+    if len(edges[node]) == 0:
+      trimmers.append(node)
+
+  #then pop 'em
+  for node in trimmers:
+    edges.pop(node)
+  return edges, accepting
+
 
 def nfsmHelper(current, edges, accepting, visited):
-  #base case
-  if current in accepting:
-    #success
-    visited.append(accepting[0])
-    return visited
-  #recurse  
+  if current in visited:
+    return False
+  elif current in accepting:
+    return True
   else:
-    for edge in edges:
-      if accepting[0] in edges[edge]:
-        #cap off infinite recursion in case of self loop
-        if (len(visited) - len(set(visited))) > 5 :
-          visited.append(edge[0])
-          return visited
-        else:        
-          visited.append(edge[0])
-          return nfsmHelper(current, edges, edge, visited)   
+    #add current to visited
+    newvisited = visited + [current]
+    for node in edges:
+      if node[0] == current:
+        for edge in edges[node]:
+          accepted = nfsmHelper(edge, edges, accepting, newvisited)
+          if accepted:
+            return True
 
 # We have included a few test cases, but you will definitely want to make
 # your own. 
@@ -83,21 +89,18 @@ edges1 = { (1,'a') : [1] ,
            (3,'b') : [4] ,
            (8,'z') : [9] , } 
 accepting1 = [ 1 ] 
+(new_edges1, new_accepting1) = nfsmtrim(edges1,accepting1) 
+print new_edges1
+print new_edges1 == {(1, 'a'): [1]}
+print new_accepting1 == [1] 
 
-print nfsmtrim(edges1, accepting1)
+(new_edges2, new_accepting2) = nfsmtrim(edges1,[]) 
+print new_edges2 == {}
+print new_accepting2 == [] 
 
-# (new_edges1, new_accepting1) = nfsmtrim(edges1,accepting1) 
-# print new_edges1
-# print new_edges1 == {(1, 'a'): [1]}
-# print new_accepting1 == [1] 
-
-# (new_edges2, new_accepting2) = nfsmtrim(edges1,[]) 
-# print new_edges2 == {}
-# print new_accepting2 == [] 
-
-# (new_edges3, new_accepting3) = nfsmtrim(edges1,[3,6]) 
-# print new_edges3 == {(1, 'a'): [1], (1, 'b'): [2], (2, 'b'): [3]}
-# print new_accepting3 == [3]
+(new_edges3, new_accepting3) = nfsmtrim(edges1,[3,6]) 
+print new_edges3 == {(1, 'a'): [1], (1, 'b'): [2], (2, 'b'): [3]}
+print new_accepting3 == [3]
 
 edges4 = { (1,'a') : [1] ,
            (1,'b') : [2,5] ,
@@ -105,13 +108,12 @@ edges4 = { (1,'a') : [1] ,
            (3,'b') : [4] ,
            (3,'c') : [2,1,4] } 
 accepting4 = [ 2 ] 
-
-print nfsmtrim(edges4, accepting4) 
-# (new_edges4, new_accepting4) = nfsmtrim(edges4, accepting4) 
-# print new_edges4 == { 
-#   (1, 'a'): [1],
-#   (1, 'b'): [2], 
-#   (2, 'b'): [3], 
-#   (3, 'c'): [2, 1], 
-# }
-# print new_accepting4 == [2]
+(new_edges4, new_accepting4) = nfsmtrim(edges4, accepting4) 
+print new_edges4 == { 
+  (1, 'a'): [1],
+  (1, 'b'): [2], 
+  (2, 'b'): [3], 
+  (3, 'c'): [2, 1], 
+}
+print new_edges4
+print new_accepting4 == [2]
