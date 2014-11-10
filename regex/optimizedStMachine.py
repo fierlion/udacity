@@ -53,7 +53,6 @@ def nfsmtrim(edges, accepting):
       for item in success:
         keepers.append(item)
 
-
   keepSet = set(keepers)
 
   #remove unwanted edges
@@ -138,4 +137,3 @@ edges5 = { (1,'a') : [1] ,
 accepting5 = [3]
 
 (new_edges5, new_accepting5) = nfsmtrim(edges5, accepting5)
-print new_edges5, accepting5
