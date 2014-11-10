@@ -36,10 +36,13 @@
 # corresponding to a FSM that accepts exactly the same strings as the input
 # FSM but that has all dead states removed. 
 
+import copy
+
 def nfsmtrim(edges, accepting): 
   visited = []
   keepers = []
   trimmers = []
+  trimmedEdges = copy.deepcopy(edges)
 
   #find dead nodes/edges
   for node in edges:
@@ -52,17 +55,18 @@ def nfsmtrim(edges, accepting):
   for node in edges:
     for edge in edges[node]:
       if edge not in keepSet:
-        edges[node].remove(edge)
+        trimmedEdges[node].remove(edge)
 
   #make list of unwanted nodes to pop
-  for node in edges:
-    if len(edges[node]) == 0:
+  for node in trimmedEdges:
+    if len(trimmedEdges[node]) == 0:
       trimmers.append(node)
 
   #then pop 'em
   for node in trimmers:
-    edges.pop(node)
-  return edges, accepting
+    trimmedEdges.pop(node)
+
+  return trimmedEdges, accepting
 
 
 def nfsmHelper(current, edges, accepting, visited):
@@ -94,11 +98,15 @@ print new_edges1
 print new_edges1 == {(1, 'a'): [1]}
 print new_accepting1 == [1] 
 
+print "EDGES1 is"
+print edges1
+
 (new_edges2, new_accepting2) = nfsmtrim(edges1,[]) 
 print new_edges2 == {}
 print new_accepting2 == [] 
 
 (new_edges3, new_accepting3) = nfsmtrim(edges1,[3,6]) 
+print new_edges3
 print new_edges3 == {(1, 'a'): [1], (1, 'b'): [2], (2, 'b'): [3]}
 print new_accepting3 == [3]
 
@@ -115,5 +123,5 @@ print new_edges4 == {
   (2, 'b'): [3], 
   (3, 'c'): [2, 1], 
 }
-print new_edges4
+#print new_edges4
 print new_accepting4 == [2]
